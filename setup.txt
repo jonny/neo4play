@@ -1,0 +1,8 @@
+
+
+* Download Neo4j
+* Extract to a directory
+* Create Java project
+* Copy Neo4j lib folder to project
+* Include lib folder in build path
+
