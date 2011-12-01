@@ -13,7 +13,7 @@ public class HelloWorld {
 		KNOWS
 	}
 
-	private static final String DB_PATH = "../db/";
+	private static final String DB_PATH = "target/db/";
 
 	public static void main(String[] args) {
 		GraphDatabaseService graphDb = new EmbeddedGraphDatabase(DB_PATH);
