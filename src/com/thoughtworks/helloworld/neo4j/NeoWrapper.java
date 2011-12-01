@@ -1,6 +1,8 @@
 package com.thoughtworks.helloworld.neo4j;
 
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 
 public class NeoWrapper {
@@ -22,6 +24,21 @@ public class NeoWrapper {
 		    tx.finish();
 		}
 
+	}
+	
+	public void cleanUp() {
+		execute(new DbCommand() {
+			
+			@Override
+			void execute(GraphDatabaseService graphDb) {
+				for (Node node : graphDb.getAllNodes()) {
+				    for (Relationship rel : node.getRelationships()) {
+				        rel.delete();
+				    }
+				    node.delete();
+				}
+			}
+		});		
 	}
 
 	

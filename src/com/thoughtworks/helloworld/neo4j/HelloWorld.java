@@ -37,21 +37,8 @@ public class HelloWorld {
 				
 			}
 		});
-
 		
-		
-		db.execute(new DbCommand() {
-			
-			@Override
-			void execute(GraphDatabaseService graphDb) {
-				for (Node node : graphDb.getAllNodes()) {
-				    for (Relationship rel : node.getRelationships()) {
-				        rel.delete();
-				    }
-				    node.delete();
-				}
-			}
-		});
+		db.cleanUp();
 
 	}
 
