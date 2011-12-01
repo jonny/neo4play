@@ -4,6 +4,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.kernel.EmbeddedGraphDatabase;
 
 public class HelloWorld {
 	
@@ -13,8 +14,9 @@ public class HelloWorld {
 
 	private static final String DB_PATH = "target/db/";
 
-	public static void main(String[] args) {		
-		NeoWrapper db = new NeoWrapper(DB_PATH);
+	public static void main(String[] args) {
+		GraphDatabaseService graphDb = new EmbeddedGraphDatabase(DB_PATH);
+		NeoWrapper db = new NeoWrapper(graphDb);
 		
 		db.execute(new DbCommand() {
 			
@@ -50,6 +52,7 @@ public class HelloWorld {
 				}
 			}
 		});
+
 	}
 
 

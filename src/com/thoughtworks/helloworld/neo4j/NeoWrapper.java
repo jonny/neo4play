@@ -2,14 +2,13 @@ package com.thoughtworks.helloworld.neo4j;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.kernel.EmbeddedGraphDatabase;
 
 public class NeoWrapper {
 	
 	private final GraphDatabaseService graphDb;
 
-	public NeoWrapper(String path) {
-		this.graphDb = new EmbeddedGraphDatabase(path);
+	public NeoWrapper(GraphDatabaseService graphDb) {
+		this.graphDb = graphDb;
 		registerShutdownHook(graphDb);
 	}
 	
