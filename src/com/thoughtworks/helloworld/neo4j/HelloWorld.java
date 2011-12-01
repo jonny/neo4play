@@ -4,8 +4,6 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.kernel.EmbeddedGraphDatabase;
 
 public class HelloWorld {
 	
@@ -15,53 +13,43 @@ public class HelloWorld {
 
 	private static final String DB_PATH = "target/db/";
 
-	public static void main(String[] args) {
-		GraphDatabaseService graphDb = new EmbeddedGraphDatabase(DB_PATH);
-		registerShutdownHook(graphDb);
+	public static void main(String[] args) {		
+		NeoWrapper db = new NeoWrapper(DB_PATH);
 		
-		Transaction tx = graphDb.beginTx();
-		try {
-			Node firstNode = graphDb.createNode();
-			Node secondNode = graphDb.createNode();
-			 
-			Relationship relationship = firstNode.createRelationshipTo(secondNode, RelTypes.KNOWS);
-			 
-			firstNode.setProperty("message", "Hello, ");
-			secondNode.setProperty("message", "world!");
-			relationship.setProperty("message", "brave Neo4j ");			
+		db.execute(new DbCommand() {
 			
-			System.out.print(firstNode.getProperty("message"));
-			System.out.print(relationship.getProperty("message"));
-			System.out.print(secondNode.getProperty("message"));
-			
-			for (Node node : graphDb.getAllNodes()) {
-			    for (Relationship rel : node.getRelationships()) {
-			        rel.delete();
-			    }
-			    node.delete();
+			@Override
+			void execute(GraphDatabaseService graphDb) {
+				Node firstNode = graphDb.createNode();
+				Node secondNode = graphDb.createNode();
+				 
+				Relationship relationship = firstNode.createRelationshipTo(secondNode, RelTypes.KNOWS);
+				 
+				firstNode.setProperty("message", "Hello, ");
+				secondNode.setProperty("message", "world!");
+				relationship.setProperty("message", "brave Neo4j ");			
+				
+				System.out.print(firstNode.getProperty("message"));
+				System.out.print(relationship.getProperty("message"));
+				System.out.print(secondNode.getProperty("message"));
+				
 			}
+		});
 
-			tx.success();
+		
+		
+		db.execute(new DbCommand() {
 			
-		} finally {
-		    tx.finish();
-		}
-		
-		
-
-	}
-		
-	
-	private static void registerShutdownHook(final GraphDatabaseService graphDb) {
-	    // Registers a shutdown hook for the Neo4j instance so that it
-	    // shuts down nicely when the VM exits (even if you "Ctrl-C" the
-	    // running example before it's completed)
-	    Runtime.getRuntime().addShutdownHook(new Thread() {
-	        @Override
-	        public void run() {
-	            graphDb.shutdown();
-	        }
-	    });
+			@Override
+			void execute(GraphDatabaseService graphDb) {
+				for (Node node : graphDb.getAllNodes()) {
+				    for (Relationship rel : node.getRelationships()) {
+				        rel.delete();
+				    }
+				    node.delete();
+				}
+			}
+		});
 	}
 
 
